@@ -13,7 +13,7 @@ export class UserDto {
         return new UserDto(
             model.id,
             model.username,
-            model.nombre,
+            model.name,
             model.rol ? RolDto.fromModel(model.rol) : undefined,
         );
     }

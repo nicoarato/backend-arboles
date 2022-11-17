@@ -2,35 +2,32 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
     JoinTable,
-    ManyToOne,
+    ManyToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Rol } from './rol.entity';
+import { User } from '../../user/entity/user.entity';
 
 @Entity()
-export class User {
+export class Proyecto {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    username: string;
-
-    @Column()
-    name: string;
-
-    @Column()
-    password: string;
-
-    @ManyToOne((type) => Rol, { nullable: false })
-    @JoinColumn({ name: 'rol_id' })
-    rol: Rol;
+    nombre: string;
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
 
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt: Date;
+
+    @ManyToMany(() => User)
+    @JoinTable({
+        name: 'user_proyecto',
+        joinColumn: { name: 'proyecto_id' },
+        inverseJoinColumn: { name: 'user_id' },
+    })
+    usuarios: User[];
 }

@@ -8,6 +8,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RouterModule } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
+import { ArbolController } from './modules/arbol/controllers/arbol.controller';
+import { ArbolModule } from './modules/arbol/arbol.module';
+import { ProyectoModule } from './modules/proyecto/proyecto.module';
 
 @Module({
     imports: [
@@ -16,11 +19,21 @@ import { DatabaseModule } from './database/database.module';
         }),
         AuthModule,
         UserModule,
+        ProyectoModule,
+        ArbolModule,
         DatabaseModule,
         RouterModule.register([
             {
                 path: 'auth',
                 module: AuthModule,
+            },
+            {
+                path: 'arbol',
+                module: ArbolModule,
+            },
+            {
+                path: 'proyecto',
+                module: ProyectoModule,
             },
             {
                 path: 'user',

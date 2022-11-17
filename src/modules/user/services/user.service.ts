@@ -52,7 +52,7 @@ export class UsersService {
             }
 
             const user = new User();
-            user.nombre = createUserDto.nombre;
+            user.name = createUserDto.name;
             user.username = createUserDto.username;
             user.password = this.hashPassword(createUserDto.password);
             user.rol = await this.rolesRepository.findOneBy({
