@@ -1,4 +1,11 @@
-import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Param,
+    ParseIntPipe,
+    Post,
+} from '@nestjs/common';
 import { AllowAnon } from '../../auth/jwt-auth.guard';
 import { ProyectoService } from '../services/proyecto.service';
 import { CreateProyectoDto } from './dto/createProyecto.dto';
@@ -30,5 +37,15 @@ export class ProyectoController {
         @Param('user', ParseIntPipe) user: number,
     ): Observable<ProyectoDto> {
         return this.proyectoService.desasociate(proyecto, user);
+    }
+
+    @Get()
+    findAll(): any {
+        return this.proyectoService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: number): any {
+        return this.proyectoService.findOne(id);
     }
 }

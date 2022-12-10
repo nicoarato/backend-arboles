@@ -25,7 +25,7 @@ export class ArbolService {
                 const proyecto: Proyecto =
                     await this.proyectoRepository.findOne({
                         where: {
-                            id: arbolDto.proyecto.id,
+                            id: arbolDto.proyecto,
                         },
                     });
                 const entity: Arbol = this.arbolRepository.create({

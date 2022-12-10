@@ -88,4 +88,12 @@ export class ProyectoService {
             }),
         );
     }
+
+    findAll() {
+        return this.proyectoRepository.find({});
+    }
+
+    findOne(id: number) {
+        return this.proyectoRepository.findOneBy({ id });
+    }
 }

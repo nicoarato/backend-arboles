@@ -9,7 +9,6 @@ import { ArbolDto } from '../dtos/arbol.dto';
 export class ArbolController {
     constructor(private readonly arbolService: ArbolService) {}
     @Post()
-    @AllowAnon()
     create(@Body() createArbolDto: CreateArbolDto): Observable<ArbolDto> {
         return this.arbolService.create(createArbolDto);
     }

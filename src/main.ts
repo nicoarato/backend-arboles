@@ -17,7 +17,7 @@ async function bootstrap() {
             transform: true,
             transformOptions: { enableImplicitConversion: true },
             always: true,
-            whitelist: true,
+            // whitelist: true,
             strictGroups: true,
         }),
     );
