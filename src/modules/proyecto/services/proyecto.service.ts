@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Proyecto } from '../entities/proyecto.entity';
 import { DataSource, Repository } from 'typeorm';
@@ -7,6 +7,7 @@ import { from, map, Observable, of, switchMap, zip } from 'rxjs';
 import { UsersService } from '../../user/services/user.service';
 import { User } from '../../user/entity/user.entity';
 import { BusinessException } from '../../../exceptions/business.exception';
+import { UpdateProyectoDto } from '../controllers/dto/updateProyecto.dto';
 
 @Injectable()
 export class ProyectoService {
@@ -17,11 +18,19 @@ export class ProyectoService {
         private dataSource: DataSource,
     ) {}
 
-    create(proyecto: { nombre: string }): Observable<ProyectoDto> {
+    create(proyecto: {
+        nombre: string;
+        localidad: string;
+        provincia: string;
+        tiempoEstimado: string;
+    }): Observable<ProyectoDto> {
         return from(
             this.dataSource.transaction<Proyecto>(async (manager) => {
                 const entity: Proyecto = this.proyectoRepository.create({
                     nombre: proyecto.nombre,
+                    localidad: proyecto.localidad,
+                    provincia: proyecto.provincia,
+                    tiempoEstimado: proyecto.tiempoEstimado,
                 });
                 return this.proyectoRepository.save(entity);
             }),
@@ -95,5 +104,15 @@ export class ProyectoService {
 
     findOne(id: number) {
         return this.proyectoRepository.findOneBy({ id });
+    }
+
+    async update(id: any, updateProyectoDto: UpdateProyectoDto) {
+        const proyecto = await this.proyectoRepository.preload({
+            id,
+            ...updateProyectoDto,
+        });
+        if (!proyecto) throw new NotFoundException(`Proyecto ${id} not found.`);
+
+        this.proyectoRepository.save(proyecto);
     }
 }

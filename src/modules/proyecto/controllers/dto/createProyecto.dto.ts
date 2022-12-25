@@ -7,4 +7,16 @@ export class CreateProyectoDto {
     @IsNumber()
     @IsOptional()
     id: string;
+
+    @IsString()
+    @IsOptional()
+    localidad: string;
+
+    @IsString()
+    @IsOptional()
+    provincia: string;
+
+    @IsString()
+    @IsOptional()
+    tiempoEstimado: string;
 }
