@@ -34,10 +34,10 @@ export class UsersController {
     //     return this.usersService.findAll();
     // }
 
-    // @Get(':id')
-    // findOne(@Param('id') id: string): Promise<User> {
-    //     return this.usersService.findOne(id);
-    // }
+    @Get(':id')
+    findOne(@Param('id') id: number): Promise<any> {
+        return this.usersService.findOne(id);
+    }
     //
     // @Delete(':id')
     // remove(@Param('id') id: string): Promise<void> {
