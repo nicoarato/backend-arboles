@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Arbol } from './../entities/arbol.entity';
+import { Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Proyecto } from '../../proyecto/entities/proyecto.entity';
 import { DataSource, Repository } from 'typeorm';
 import { UsersService } from '../../user/services/user.service';
-import { Arbol } from '../entities/arbol.entity';
 import { from, map, Observable } from 'rxjs';
 import { ArbolDto } from '../dtos/arbol.dto';
 import { CreateArbolDto } from '../controllers/dtos/create-arbol.dto.ts/create-arbol.dto';
@@ -97,5 +97,31 @@ export class ArbolService {
                 return this.arbolRepository.save(entity);
             }),
         ).pipe(map((arbol) => ArbolDto.fromEntity(arbol)));
+    }
+
+    findAll() {
+        return this.arbolRepository.find();
+    }
+
+    findOne(id: number): any {
+        return this.arbolRepository.findOneBy({ id });
+    }
+
+    findByProject(proyecto: number): any {
+        return this.dataSource
+            .getRepository(Arbol)
+            .createQueryBuilder('arbol')
+            .select([
+                'arbol.id',
+                'arbol.direccion',
+                'arbol.latitud',
+                'arbol.longitud',
+            ])
+            .where('arbol.proyecto = :proyecto', { proyecto })
+            .getMany();
+    }
+
+    delete(id: number): any {
+        return this.arbolRepository.softRemove({ id });
     }
 }

@@ -12,7 +12,9 @@ import { User } from '../../user/entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UserDto } from '../../user/dto/user.dto';
 import { AllowAnon } from '../jwt-auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Login Module')
 @Controller()
 export class AuthController {
     constructor(

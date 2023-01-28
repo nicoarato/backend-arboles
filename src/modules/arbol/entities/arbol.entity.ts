@@ -8,6 +8,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { Proyecto } from '../../proyecto/entities/proyecto.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Arbol {
