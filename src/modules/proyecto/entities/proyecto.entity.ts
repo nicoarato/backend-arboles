@@ -17,6 +17,15 @@ export class Proyecto {
     @Column()
     nombre: string;
 
+    @Column({ nullable: true })
+    localidad: string;
+
+    @Column({ nullable: true })
+    provincia: string;
+
+    @Column({ name: 'tiempo_estimado', nullable: true })
+    tiempoEstimado: string;
+
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;
 

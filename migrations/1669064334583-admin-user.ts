@@ -9,6 +9,9 @@ export class adminuser1669064334583 implements MigrationInterface {
             `INSERT INTO "arboles"."rol" (id, description) VALUES (1,'Administrador')`,
         );
         await queryRunner.query(
+            `INSERT INTO "arboles"."rol" (id, description) VALUES (2,'Inspector')`,
+        );
+        await queryRunner.query(
             `INSERT INTO "arboles"."user" (username, name, password, rol_id) VALUES ('admin', 'Administrador', '$2b$10$liLvGWmoPruS3pm4wDOcReutxsGsVmUxfiolGVx3Zv0TtzsNdS9Km', 1)`,
         );
     }

@@ -4,6 +4,7 @@ import {
     Delete,
     Get,
     Param,
+    Patch,
     Post,
     UnauthorizedException,
     UseGuards,
@@ -14,6 +15,9 @@ import { UserDto } from '../dto/user.dto';
 
 import { User } from '../../auth/user.decorator';
 import { AllowAnon, JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+
+@ApiTags('User Module')
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class UsersController {
@@ -24,23 +28,24 @@ export class UsersController {
         return this.usersService.create(createUserDto);
     }
 
+    @ApiExcludeEndpoint()
     @Get('info')
     info(@User() user: UserDto): UserDto {
         return user;
     }
 
-    // @Get()
-    // findAll(): Promise<User[]> {
-    //     return this.usersService.findAll();
-    // }
+    @Patch()
+    update(@Param('id') id: number): Promise<any> {
+        return this.usersService.findAll();
+    }
 
-    // @Get(':id')
-    // findOne(@Param('id') id: string): Promise<User> {
-    //     return this.usersService.findOne(id);
-    // }
-    //
-    // @Delete(':id')
-    // remove(@Param('id') id: string): Promise<void> {
-    //     return this.usersService.remove(id);
-    // }
+    @Get(':id')
+    findOne(@Param('id') id: number): Promise<any> {
+        return this.usersService.findOne(id);
+    }
+
+    @Delete(':id')
+    delete(@Param('id') id: number): Promise<void> {
+        return this.usersService.remove(id);
+    }
 }
