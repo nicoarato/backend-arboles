@@ -15,7 +15,7 @@ import { UserDto } from '../dto/user.dto';
 
 import { User } from '../../auth/user.decorator';
 import { AllowAnon, JwtAuthGuard } from '../../auth/jwt-auth.guard';
-import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User Module')
 @Controller()
@@ -24,6 +24,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Post()
+    @ApiOperation({ summary: 'Crea un nuevo usuario' })
     create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
         return this.usersService.create(createUserDto);
     }
@@ -34,17 +35,26 @@ export class UsersController {
         return user;
     }
 
-    @Patch()
+    @Patch(':id')
+    @ApiOperation({ summary: 'Actualiza los datos de un usuario por su ID' })
     update(@Param('id') id: number): Promise<any> {
         return this.usersService.findAll();
     }
 
     @Get(':id')
+    @ApiOperation({ summary: 'Devuelve un usuario por su ID' })
     findOne(@Param('id') id: number): Promise<any> {
         return this.usersService.findOne(id);
     }
 
+    @Get()
+    @ApiOperation({ summary: 'Devuelve la lista de usuarios' })
+    findAll(): Promise<any> {
+        return this.usersService.findAll();
+    }
+
     @Delete(':id')
+    @ApiOperation({ summary: 'Elimina un usuario por su ID' })
     delete(@Param('id') id: number): Promise<void> {
         return this.usersService.remove(id);
     }

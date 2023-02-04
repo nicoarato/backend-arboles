@@ -11,7 +11,7 @@ import {
     Post,
 } from '@nestjs/common';
 import { AllowAnon } from '../../auth/jwt-auth.guard';
-import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 
 import { CreateProyectoDto } from './dto/createProyecto.dto';
@@ -28,6 +28,7 @@ export class ProyectoController {
         private arbolService: ArbolService,
     ) {}
     @Post()
+    @ApiOperation({ summary: 'Crea un nuevo proyecto' })
     @AllowAnon()
     create(@Body() proyecto: CreateProyectoDto): Observable<ProyectoDto> {
         return this.proyectoService.create(proyecto);
@@ -53,16 +54,19 @@ export class ProyectoController {
     }
 
     @Get()
+    @ApiOperation({ summary: 'Devuelve lista de proyectos' })
     findAll(): any {
         return this.proyectoService.findAll();
     }
 
     @Get(':id')
+    @ApiOperation({ summary: 'Devuelve un proyecto por su ID' })
     findOne(@Param('id') id: number): any {
         return this.proyectoService.findOne(id);
     }
 
     @Patch(':id')
+    @ApiOperation({ summary: 'Actualiza los datos de un proyecto por su ID' })
     update(
         @Param('id') id: number,
         @Body() updateProyectoDto: UpdateProyectoDto,
@@ -71,6 +75,7 @@ export class ProyectoController {
     }
 
     @Delete(':id')
+    @ApiOperation({ summary: 'Elimina un proyecto por su ID' })
     delete(
         @Param('id') id: number,
         @Body() updateProyectoDto: UpdateProyectoDto,
@@ -79,6 +84,7 @@ export class ProyectoController {
     }
 
     @Get('/:id/arboles')
+    @ApiOperation({ summary: 'Devuelve la lista de árboles de un proyecto' })
     async getTreesByProject(@Param('id') id: number) {
         return this.arbolService.findByProject(id);
     }
