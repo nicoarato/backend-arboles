@@ -103,7 +103,18 @@ export class ProyectoService {
     }
 
     findOne(id: number) {
-        return this.proyectoRepository.findOneBy({ id });
+        return from(
+            this.proyectoRepository.findOne({
+                where: {
+                    id,
+                },
+                relations: {
+                    arboles: {
+                        archivos: true,
+                    },
+                },
+            }),
+        ).pipe(map((proyecto) => ProyectoDto.fromEntity(proyecto)));
     }
 
     async update(id: any, updateProyectoDto: UpdateProyectoDto) {

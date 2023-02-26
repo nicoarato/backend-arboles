@@ -10,6 +10,7 @@ import { DatabaseModule } from './database/database.module';
 import { ArbolController } from './modules/arbol/controllers/arbol.controller';
 import { ArbolModule } from './modules/arbol/arbol.module';
 import { ProyectoModule } from './modules/proyecto/proyecto.module';
+import { FileModule } from './modules/file/file.module';
 
 @Module({
     imports: [
@@ -21,6 +22,7 @@ import { ProyectoModule } from './modules/proyecto/proyecto.module';
         ProyectoModule,
         ArbolModule,
         DatabaseModule,
+        FileModule,
         RouterModule.register([
             {
                 path: 'auth',
@@ -37,6 +39,10 @@ import { ProyectoModule } from './modules/proyecto/proyecto.module';
             {
                 path: 'user',
                 module: UserModule,
+            },
+            {
+                path: 'file',
+                module: FileModule,
             },
         ]),
     ],

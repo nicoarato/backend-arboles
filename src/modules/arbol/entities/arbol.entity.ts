@@ -4,11 +4,13 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { Proyecto } from '../../proyecto/entities/proyecto.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { File } from '../../file/entities/file.entity';
 
 @Entity()
 export class Arbol {
@@ -21,6 +23,11 @@ export class Arbol {
     @ManyToOne((type) => Proyecto, { nullable: false })
     @JoinColumn({ name: 'proyecto_id' })
     proyecto: Proyecto;
+
+    @OneToMany((type) => File, (archivo) => archivo.arbol, {
+        cascade: ['update'],
+    })
+    archivos: File[];
 
     @CreateDateColumn({ name: 'created_at' })
     createdAt: Date;

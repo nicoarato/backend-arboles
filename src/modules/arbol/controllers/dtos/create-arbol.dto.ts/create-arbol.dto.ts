@@ -2,6 +2,7 @@ import { ProyectoDto } from '../../../../proyecto/dtos/proyecto.dto';
 
 export class CreateArbolDto {
     nombre: string;
+    archivos: number[];
     proyecto: number;
     direccion: string;
     barrio: string;

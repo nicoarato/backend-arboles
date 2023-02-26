@@ -1,5 +1,6 @@
 import { ProyectoDto } from '../../proyecto/dtos/proyecto.dto';
 import { Arbol } from '../entities/arbol.entity';
+import { FileDto } from '../../file/dtos/proyecto.dto';
 
 export class ArbolDto {
     id: number;
@@ -69,6 +70,7 @@ export class ArbolDto {
     ramasInterferenciaElectrica: string;
     ramasSobreextendidas: string;
 
+    archivos: FileDto[];
     static fromEntity(entity: Arbol): ArbolDto {
         return {
             id: entity.id,
@@ -76,6 +78,9 @@ export class ArbolDto {
             proyecto: entity.proyecto
                 ? ProyectoDto.fromEntity(entity.proyecto)
                 : undefined,
+            archivos: entity.archivos
+                ? entity.archivos.map((archivo) => FileDto.fromEntity(archivo))
+                : [],
             createdAt: entity.createdAt,
             updatedAt: entity.updatedAt,
             direccion: entity.direccion,
