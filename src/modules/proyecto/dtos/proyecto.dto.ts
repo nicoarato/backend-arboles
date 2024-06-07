@@ -1,4 +1,7 @@
 import { Proyecto } from '../entities/proyecto.entity';
+import { FileDto } from '../../file/dtos/proyecto.dto';
+import { Arbol } from '../../arbol/entities/arbol.entity';
+import { ArbolDto } from '../../arbol/dtos/arbol.dto';
 
 export class ProyectoDto {
     id: number;
@@ -6,24 +9,30 @@ export class ProyectoDto {
     localidad: string;
     provincia: string;
     tiempoEstimado: string;
+    arboles: ArbolDto[];
 
-    constructor(
-        private values: {
-            id: number;
-            nombre: string;
-            localidad: string;
-            provincia: string;
-            tiempoEstimado: string;
-        },
-    ) {
+    constructor(values: {
+        id: number;
+        nombre: string;
+        localidad: string;
+        provincia: string;
+        tiempoEstimado: string;
+        arboles: ArbolDto[];
+    }) {
         this.id = values.id;
         this.nombre = values.nombre;
         this.localidad = values.localidad;
         this.provincia = values.provincia;
         this.tiempoEstimado = values.tiempoEstimado;
+        this.arboles = values.arboles;
     }
 
     public static fromEntity(entity: Proyecto) {
-        return new ProyectoDto(entity);
+        return new ProyectoDto({
+            ...entity,
+            arboles: entity.arboles
+                ? entity.arboles.map((arbol) => ArbolDto.fromEntity(arbol))
+                : [],
+        });
     }
 }

@@ -4,10 +4,12 @@ import {
     Entity,
     JoinTable,
     ManyToMany,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../user/entity/user.entity';
+import { Arbol } from '../../arbol/entities/arbol.entity';
 
 @Entity()
 export class Proyecto {
@@ -39,4 +41,7 @@ export class Proyecto {
         inverseJoinColumn: { name: 'user_id' },
     })
     usuarios: User[];
+
+    @OneToMany(() => Arbol, (arbol) => arbol.proyecto)
+    arboles: Arbol[];
 }

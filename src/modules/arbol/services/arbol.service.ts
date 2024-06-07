@@ -3,11 +3,12 @@ import { Arbol } from './../entities/arbol.entity';
 import { Injectable, Param, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Proyecto } from '../../proyecto/entities/proyecto.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { UsersService } from '../../user/services/user.service';
 import { from, map, Observable } from 'rxjs';
 import { ArbolDto } from '../dtos/arbol.dto';
 import { CreateArbolDto } from '../controllers/dtos/create-arbol.dto.ts/create-arbol.dto';
+import { File } from '../../file/entities/file.entity';
 
 @Injectable()
 export class ArbolService {
@@ -16,6 +17,8 @@ export class ArbolService {
         private arbolRepository: Repository<Arbol>,
         @InjectRepository(Proyecto)
         private proyectoRepository: Repository<Proyecto>,
+        @InjectRepository(File)
+        private fileRepository: Repository<File>,
         private userService: UsersService,
         private dataSource: DataSource,
     ) {}
@@ -94,6 +97,13 @@ export class ArbolService {
                     usoBajoElArbol: arbolDto.usoBajoElArbol,
                     valorDeArbol: arbolDto.valorDeArbol,
                     vigor: arbolDto.vigor,
+                });
+                const archivos: File[] = await this.fileRepository.findBy({
+                    id: In(arbolDto.archivos),
+                });
+                entity.archivos = archivos.map((archivo) => {
+                    archivo.arbol = entity;
+                    return archivo;
                 });
                 return this.arbolRepository.save(entity);
             }),
