@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { UpdateUserDto } from './../controllers/dto/update-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../entity/user.entity';
 import { CreateUserDto } from '../controllers/dto/create-user.dto';
 import { UserDto } from '../dto/user.dto';
@@ -46,14 +47,20 @@ export class UsersService {
                 })
             ) {
                 throw new UserException(
-                    createUserDto.username,
+                    `Una propiedad username está duplicada ${createUserDto.username}`,
                     'El nombre de usuario ya está en uso',
+                    409,
                 );
             }
-
+            console.log('DATOS recibidos: ', createUserDto);
             const user = new User();
             user.name = createUserDto.name;
+            user.email = createUserDto.email;
             user.username = createUserDto.username;
+            user.lastname = createUserDto.lastname;
+            user.address = createUserDto.address;
+            user.city = createUserDto.city;
+            user.state = createUserDto.state;
             user.password = this.hashPassword(createUserDto.password);
             user.rol = await this.rolesRepository.findOneBy({
                 id: createUserDto.rol,
@@ -70,7 +77,11 @@ export class UsersService {
     }
 
     async findAll(): Promise<User[]> {
-        return this.usersRepository.find();
+        const users = await this.usersRepository.find({
+            order: { lastname: 'ASC' },
+            where: { deleted: false },
+        });
+        return users;
     }
 
     findOne(id: number): Promise<User> {
@@ -80,8 +91,64 @@ export class UsersService {
         });
     }
 
+    async softDeleteUser(id: number): Promise<void> {
+        const user = await this.usersRepository.findOne({
+            where: { id },
+            relations: ['rol'],
+        });
+        if (user) {
+            user.deleted = true;
+            user.deletedAt = new Date().toISOString();
+            await this.usersRepository.save(user);
+        }
+    }
+
     async remove(id: number): Promise<void> {
-        const user = await this.findOne(id);
-        await this.usersRepository.softRemove(user);
+        return await this.softDeleteUser(id);
+    }
+
+    async update(id: number, updateUserDto: UpdateUserDto) {
+        const { name, lastname, password, email, address, city, state } =
+            updateUserDto;
+        const userToUpdate = {};
+
+        if (name !== null && name !== undefined) {
+            userToUpdate['name'] = name;
+        }
+
+        if (lastname !== null && lastname !== undefined) {
+            userToUpdate['lastname'] = lastname;
+        }
+
+        if (password !== null && password !== undefined) {
+            userToUpdate['password'] = this.hashPassword(password);
+        }
+
+        if (email !== null && email !== undefined) {
+            userToUpdate['email'] = email;
+        }
+
+        if (address !== null && address !== undefined) {
+            userToUpdate['address'] = address;
+        }
+
+        if (city !== null && city !== undefined) {
+            userToUpdate['city'] = city;
+        }
+
+        if (state !== null && state !== undefined) {
+            userToUpdate['state'] = state;
+        }
+
+        userToUpdate['updatedAt'] = new Date();
+
+        const user = await this.usersRepository.preload({
+            id,
+            ...userToUpdate,
+        });
+        if (!user) throw new NotFoundException(`User ${id} not found.`);
+
+        console.log(userToUpdate);
+        return this.usersRepository.save(user);
     }
 }

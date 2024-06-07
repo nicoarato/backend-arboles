@@ -1,14 +1,5 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    Post,
-    UnauthorizedException,
-} from '@nestjs/common';
+import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../../user/services/user.service';
-import { User } from '../../user/entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UserDto } from '../../user/dto/user.dto';
 import { AllowAnon } from '../jwt-auth.guard';

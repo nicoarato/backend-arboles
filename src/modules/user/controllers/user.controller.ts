@@ -12,10 +12,12 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from '../services/user.service';
 import { UserDto } from '../dto/user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 import { User } from '../../auth/user.decorator';
 import { AllowAnon, JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { ApiExcludeEndpoint, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { OrderByCondition } from 'typeorm';
 
 @ApiTags('User Module')
 @Controller()
@@ -37,8 +39,11 @@ export class UsersController {
 
     @Patch(':id')
     @ApiOperation({ summary: 'Actualiza los datos de un usuario por su ID' })
-    update(@Param('id') id: number): Promise<any> {
-        return this.usersService.findAll();
+    update(
+        @Param('id') id: number,
+        @Body() updateUserDto: UpdateUserDto,
+    ): Promise<any> {
+        return this.usersService.update(id, updateUserDto);
     }
 
     @Get(':id')

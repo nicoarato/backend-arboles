@@ -19,18 +19,39 @@ export class User {
     username: string;
 
     @Column()
-    name: string;
+    email: string;
 
     @Column()
+    name: string;
+
+    @Column({ nullable: true })
+    lastname: string;
+
+    @Column({ nullable: true })
+    address: string;
+
+    @Column({ nullable: true })
+    city: string;
+
+    @Column({ nullable: true })
+    state: string;
+
+    @Column({ select: false })
     password: string;
 
     @ManyToOne((type) => Rol, { nullable: false })
     @JoinColumn({ name: 'rol_id' })
     rol: Rol;
 
-    @CreateDateColumn({ name: 'created_at' })
+    @CreateDateColumn({ name: 'created_at', type: 'timestamp', nullable: true })
     createdAt: Date;
 
-    @UpdateDateColumn({ name: 'updated_at' })
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp', nullable: true })
     updatedAt: Date;
+
+    @Column({ default: false })
+    deleted: boolean;
+
+    @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
+    deletedAt: string;
 }
