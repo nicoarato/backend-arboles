@@ -14,14 +14,13 @@ import { File } from '../../file/entities/file.entity';
 export class ArbolService {
     constructor(
         @InjectRepository(Arbol)
-        private arbolRepository: Repository<Arbol>,
+        private readonly arbolRepository: Repository<Arbol>,
         @InjectRepository(Proyecto)
-        private proyectoRepository: Repository<Proyecto>,
+        private readonly proyectoRepository: Repository<Proyecto>,
         @InjectRepository(File)
-        private fileRepository: Repository<File>,
-        private userService: UsersService,
-        private dataSource: DataSource,
-    ) {}
+        private readonly fileRepository: Repository<File>,
+        private readonly dataSource: DataSource,
+    ) { }
 
     create(arbolDto: CreateArbolDto): Observable<ArbolDto> {
         return from(
@@ -32,79 +31,31 @@ export class ArbolService {
                             id: arbolDto.proyecto,
                         },
                     });
+
+                if (!proyecto) {
+                    throw new Error('Proyecto no encontrado');
+                }
+
                 const entity: Arbol = this.arbolRepository.create({
-                    nombre: arbolDto.nombre,
+                    ...arbolDto,
                     proyecto,
-                    agallasTermiterosHormigueros:
-                        arbolDto.agallasTermiterosHormigueros,
-                    altura: arbolDto.altura,
-                    barrio: arbolDto.barrio,
-                    coeficienteDeEsbeltez: arbolDto.coeficienteDeEsbeltez,
-                    conCortezaIncluida: arbolDto.conCortezaIncluida,
-                    conDefectosAdicionales: arbolDto.conDefectosAdicionales,
-                    cortezaPerdidaMuerta: arbolDto.cortezaPerdidaMuerta,
-                    defectosEnRaices: arbolDto.defectosEnRaices,
-                    densidadDeCopa: arbolDto.densidadDeCopa,
-                    direccion: arbolDto.direccion,
-                    enfermedades: arbolDto.enfermedades,
-                    espacioDeCrecimiento: arbolDto.espacioDeCrecimiento,
-                    especie: arbolDto.especie,
-                    exposicionAlVientoDominante:
-                        arbolDto.exposicionAlVientoDominante,
-                    exudacionDeSavia: arbolDto.exudacionDeSavia,
-                    faltante: arbolDto.faltante,
-                    forma: arbolDto.forma,
-                    inclinacion: arbolDto.inclinacion,
-                    latitud: arbolDto.latitud,
-                    longitud: arbolDto.longitud,
-                    lxCancroTronco: arbolDto.lxCancroTronco,
-                    manzana: arbolDto.manzana,
-                    movilidadDeBlanco: arbolDto.movilidadDeBlanco,
-                    muerto: arbolDto.muerto,
-                    perimetro: arbolDto.perimetro,
-                    plagas: arbolDto.plagas,
-                    platoRadicularORaicesExpuestas:
-                        arbolDto.platoRadicularORaicesExpuestas,
-                    raicesCuerposFructiferos: arbolDto.raicesCuerposFructiferos,
-                    raicesDanoMecanico: arbolDto.raicesDanoMecanico,
-                    raicesEstrangulantes: arbolDto.raicesEstrangulantes,
-                    ramasCancros: arbolDto.ramasCancros,
-                    ramasCavidades: arbolDto.ramasCavidades,
-                    ramasCuerposFructiferosEnHongos:
-                        arbolDto.ramasCuerposFructiferosEnHongos,
-                    ramasColgantesQuebrantes: arbolDto.ramasColgantesQuebrantes,
-                    ramasHorquetaConCorteza: arbolDto.ramasHorquetaConCorteza,
-                    ramasHorquetaConDefectos: arbolDto.ramasHorquetaConDefectos,
-                    ramasHorquetas: arbolDto.ramasHorquetas,
-                    ramasMuertas: arbolDto.ramasMuertas,
-                    ramasRajaduras: arbolDto.ramasRajaduras,
-                    troncoCancros: arbolDto.troncoCancros,
-                    ramasInterferenciaElectrica:
-                        arbolDto.ramasInterferenciaElectrica,
-                    ramasPudricionDeMadera: arbolDto.ramasPudricionDeMadera,
-                    ramasSobreextendidas: arbolDto.ramasSobreextendidas,
-                    troncoPudricionDeMadera: arbolDto.troncoPudricionDeMadera,
-                    troncoCavidades: arbolDto.troncoCavidades,
-                    troncoHorquetas: arbolDto.troncoHorquetas,
-                    troncoInclinacion: arbolDto.troncoInclinacion,
-                    troncoHeridas: arbolDto.troncoHeridas,
-                    troncoRajaduras: arbolDto.troncoRajaduras,
-                    tEspesorDeParedTronco: arbolDto.tEspesorDeParedTronco,
-                    troncoFustesMultiples: arbolDto.troncoFustesMultiples,
-                    troncoOrificios: arbolDto.troncoOrificios,
-                    restriccionDeUso: arbolDto.restriccionDeUso,
-                    tasaDeUso: arbolDto.tasaDeUso,
-                    usoBajoElArbol: arbolDto.usoBajoElArbol,
-                    valorDeArbol: arbolDto.valorDeArbol,
-                    vigor: arbolDto.vigor,
                 });
-                const archivos: File[] = await this.fileRepository.findBy({
-                    id: In(arbolDto.archivos),
-                });
-                entity.archivos = archivos.map((archivo) => {
-                    archivo.arbol = entity;
-                    return archivo;
-                });
+
+                if (
+                    Array.isArray(arbolDto.archivos) &&
+                    arbolDto.archivos.length > 0
+                ) {
+                    const archivos: File[] = await this.fileRepository.findBy({
+                        id: In(arbolDto.archivos),
+                    });
+                    entity.archivos = archivos.map((archivo) => {
+                        archivo.arbol = entity;
+                        return archivo;
+                    });
+                } else {
+                    entity.archivos = [];
+                }
+
                 return this.arbolRepository.save(entity);
             }),
         ).pipe(map((arbol) => ArbolDto.fromEntity(arbol)));
@@ -135,8 +86,15 @@ export class ArbolService {
             .getMany();
     }
 
-    delete(id: number): any {
-        return this.arbolRepository.softRemove({ id });
+    delete(id: number): Observable<void> {
+        return from(
+            this.arbolRepository.findOneBy({ id }).then((arbol) => {
+                if (!arbol) {
+                    throw new Error('Árbol no encontrado');
+                }
+                return this.arbolRepository.softRemove(arbol);
+            }),
+        ).pipe(map(() => void 0)); // Transformamos el resultado a void
     }
 
     async update(id: number, updateArbolDto: UpdateArbolDto) {
@@ -162,7 +120,7 @@ export class ArbolService {
         });
         if (!arbol) throw new NotFoundException(`arbol ${id} not found.`);
 
-        console.log(arbolToUpdate);
+        console.log('Params updated: ', arbolToUpdate);
         return this.arbolRepository.save(arbol);
     }
 }

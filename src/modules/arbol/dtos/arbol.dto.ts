@@ -5,7 +5,7 @@ import { FileDto } from '../../file/dtos/proyecto.dto';
 export class ArbolDto {
     id: number;
     nombre: string;
-    proyecto: ProyectoDto;
+    proyecto: number;
     createdAt: Date;
     updatedAt: Date;
     direccion: string;
@@ -76,7 +76,7 @@ export class ArbolDto {
             id: entity.id,
             nombre: entity.nombre,
             proyecto: entity.proyecto
-                ? ProyectoDto.fromEntity(entity.proyecto)
+                ? ProyectoDto.fromEntity(entity.proyecto).id
                 : undefined,
             archivos: entity.archivos
                 ? entity.archivos.map((archivo) => FileDto.fromEntity(archivo))

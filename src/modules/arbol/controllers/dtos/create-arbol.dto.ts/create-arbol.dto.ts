@@ -4,7 +4,7 @@ export class CreateArbolDto {
     @ApiProperty({ type: String, description: 'This is a required property' })
     nombre: string;
 
-    @ApiProperty({ type: String, description: 'This is a required property' })
+    @ApiProperty({ type: Number, description: 'This is a required property' })
     proyecto: number;
 
     @ApiProperty({ type: String, description: 'This is a required property' })
@@ -184,4 +184,7 @@ export class CreateArbolDto {
 
     @ApiProperty({ type: String, description: 'This is a optional property' })
     ramasSobreextendidas: string;
+
+    @ApiProperty({ type: String, description: 'This is a optional property' })
+    archivos: File[];
 }

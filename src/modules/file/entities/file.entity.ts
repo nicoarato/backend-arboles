@@ -1,6 +1,7 @@
 import {
     Column,
     CreateDateColumn,
+    DeleteDateColumn,
     Entity,
     JoinColumn,
     JoinTable,
@@ -30,8 +31,14 @@ export class File {
     @Column()
     size: number;
 
-    @CreateDateColumn({ name: 'created_at' })
+    @CreateDateColumn({ name: 'created_at', type: 'timestamp', nullable: true })
     createdAt: Date;
+
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp', nullable: true })
+    updatedAt: Date;
+
+    @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
+    deletedAt: Date;
 
     @ManyToOne((type) => Arbol, {
         nullable: true,
