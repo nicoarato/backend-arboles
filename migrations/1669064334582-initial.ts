@@ -8,7 +8,7 @@ export class initial1669064334582 implements MigrationInterface {
             `CREATE TABLE "arboles"."rol" ("id" SERIAL NOT NULL, "description" character varying NOT NULL, CONSTRAINT "PK_c93a22388638fac311781c7f2dd" PRIMARY KEY ("id"))`,
         );
         await queryRunner.query(
-            `CREATE TABLE "arboles"."user" ("id" SERIAL NOT NULL, "username" character varying NOT NULL, "name" character varying NOT NULL, "password" character varying NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "rol_id" integer NOT NULL, CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
+            `CREATE TABLE "arboles"."user" ("id" SERIAL NOT NULL, "email" character varying NULL,"username" character varying NOT NULL, "name" character varying NOT NULL, "password" character varying NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "rol_id" integer NOT NULL, CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
         );
         await queryRunner.query(
             `CREATE TABLE "arboles"."proyecto" ("id" SERIAL NOT NULL, "nombre" character varying NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_589bf061fd654da7076e68e1699" PRIMARY KEY ("id"))`,
