@@ -12,13 +12,19 @@ El objetivo principal de este proyecto es proporcionar una herramienta que permi
 
 ### Descripción del Proyecto
 Estructura Modular: La aplicación está organizada en módulos, cada uno encargado de gestionar una parte específica del sistema, como la administración de usuarios, gestión de árboles, reportes, y más.
+
 API RESTful: Se ha desarrollado una API RESTful que permite la interacción con el sistema desde el frontend o cualquier otro cliente. Esta API proporciona endpoints seguros y eficientes para crear, leer, actualizar y eliminar (CRUD) registros de árboles y otros datos relacionados.
 Autenticación y Autorización: Implementación de mecanismos de autenticación y autorización para garantizar que solo los usuarios autorizados puedan acceder y modificar la información sensible.
+
 Virtualización con Docker: Todo el entorno de desarrollo, incluyendo la base de datos PostgreSQL, ha sido containerizado utilizando Docker. Esto permite un despliegue fácil y reproducible en cualquier entorno, ya sea local o en la nube.
 Manejo de Errores y Logging: Se han implementado estrategias robustas para el manejo de errores y logging, facilitando la monitorización y solución de problemas en el sistema.
-Beneficios del Proyecto
+
+### Beneficios del Proyecto
+
 Eficiencia en la Gestión: Facilita la administración y seguimiento de los árboles urbanos, permitiendo a las autoridades tomar decisiones informadas sobre el mantenimiento y expansión del arbolado.
+
 Escalabilidad: Gracias a la arquitectura modular de NEST.js y la utilización de Docker, el sistema puede escalarse fácilmente para manejar mayores volúmenes de datos y usuarios.
+
 Seguridad: Los mecanismos de autenticación y autorización aseguran que los datos estén protegidos contra accesos no autorizados.
 
 
